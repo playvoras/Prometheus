@@ -37,70 +37,16 @@ function AntiTamper:apply(ast, pipeline)
     if self.UseDebug then
         local string = RandomStrings.randomString();
         code = code .. [[
-            -- Anti Beautify
-			local sethook = debug and debug.sethook or function() end;
-			local allowedLine = nil;
-			local called = 0;
-			sethook(function(s, line)
-				if not line then
-					return
-				end
-				called = called + 1;
-				if allowedLine then
-					if allowedLine ~= line then
-						sethook(error, "l", 5);
-					end
-				else
-					allowedLine = line;
-				end
-			end, "l", 5);
-			(function() end)();
-			(function() end)();
-			sethook();
-			if called < 2 then
-				valid = false;
-			end
-            if called < 2 then
-                valid = false;
-            end
-
-            -- Anti Function Hook
+            -- Anti Function Hook something broke the script
             local funcs = {pcall, string.char, debug.getinfo, string.dump}
             for i = 1, #funcs do
-                if debug.getinfo(funcs[i]).what ~= "C" then
-                    valid = false;
-                end
-
-                if debug.getlocal(funcs[i], 1) then
-                    valid = false;
-                end
-
-                if debug.getupvalue(funcs[i], 1) then
-                    valid = false;
-                end
-
-                if pcall(string.dump, funcs[i]) then
-                    valid = false;
-                end
+                wait()
             end
 
             -- Anti Beautify
-            local function getTraceback()
-                local str = (function(arg)
-                    return debug.traceback(arg)
-                end)("]] .. string .. [[");
-                return str;
-            end
-    
-            local traceback = getTraceback();
-            valid = valid and traceback:sub(1, traceback:find("\n") - 1) == "]] .. string .. [[";
-            local iter = traceback:gmatch(":(%d*):");
-            local v, c = iter(), 1;
-            for i in iter do
-                valid = valid and i == v;
-                c = c + 1;
-            end
-            valid = valid and c >= 2;
+            if tonumber(string.match(tostring((function() local _, s = pcall(function() return "" / (1 - ("" ^ 2)) end) return s end)() ), ':(%d+):')) ~= 1 then
+		        return print("  ____ _____ _____   _____ _   _ _____   _____ _   _  ____ _  __\n / ___| ____|_   _| |_   _| | | | ____| |  ___| | | |/ ___| |/ /\n| |  _|  _|   | |     | | | |_| |  _|   | |_  | | | | |   | ' / \n| |_| | |___  | |     | | |  _  | |___  |  _| | |_| | |___| . \\ \n \\____|_____|_|_|_ _  |_| |_| |_|_____| |_|    \\___/ \\____|_|\_\\\n / _ \\| | | |_   _| |                                           \n| | | | | | | | | | |                                           \n| |_| | |_| | | | |_|                                           \n \\___/ \\___/  |_| (_)")
+	        end
         ]]
     end
     code = code .. [[
