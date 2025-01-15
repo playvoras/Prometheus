@@ -71,9 +71,9 @@ function AntiTamper:apply(ast, pipeline)
                     valid = false;
                 end
 
-                if debug.getlocal(funcs[i], 1) then
-                    valid = false;
-                end
+                --if debug.getlocal(funcs[i], 1) then -- removed because make script broken
+                --    valid = false;
+                --end
 
                 if debug.getupvalue(funcs[i], 1) then
                     valid = false;
@@ -101,6 +101,13 @@ function AntiTamper:apply(ast, pipeline)
                 c = c + 1;
             end
             valid = valid and c >= 2;
+
+		    local idkwhattoname = warn or print
+
+		    -- New Anti Beautify
+		    if tonumber(string.match(tostring((function() local _, s = pcall(function() return "" / (1 - ("" ^ 2)) end) return s end)() ), ':(%d+):')) ~= 1 then
+		         return idkname("  ____ _____ _____   _____ _   _ _____   _____ _   _  ____ _  __\n / ___| ____|_   _| |_   _| | | | ____| |  ___| | | |/ ___| |/ /\n| |  _|  _|   | |     | | | |_| |  _|   | |_  | | | | |   | ' / \n| |_| | |___  | |     | | |  _  | |___  |  _| | |_| | |___| . \\ \n \\____|_____|_|_|_ _  |_| |_| |_|_____| |_|    \\___/ \\____|_|\_\\\n / _ \\| | | |_   _| |                                           \n| | | | | | | | | | |                                           \n| |_| | |_| | | | |_|                                           \n \\___/ \\___/  |_| (_)")
+	        end
         ]]
     end
     code = code .. [[
